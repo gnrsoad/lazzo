@@ -2,6 +2,7 @@ package com.lazzo.project.config;
 
 import com.lazzo.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,6 +29,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers(
                 "/registration**",
+                "/dashboard**",
                 "/js/**",
                 "/css/**",
                 "/img/**").permitAll()
@@ -35,6 +37,8 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/dashboard", true)
                 .permitAll()
                 .and()
                 .logout()
@@ -42,6 +46,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/login")
                 .permitAll();
     }
 
@@ -57,4 +62,5 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
     }
+
 }
